@@ -9,14 +9,14 @@ use App\Http\Resources\Api\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::paginate();
+        $users = $this->include('tickets') ? User::with('tickets')->paginate() : User::paginate();
 
         return UserResource::collection($users);
     }
@@ -34,6 +34,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user = $this->include('tickets') ? $user->load('tickets') : $user;
+
         return new UserResource($user);
     }
 
