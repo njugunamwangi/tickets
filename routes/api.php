@@ -13,4 +13,10 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::middleware('auth:sanctum')->apiResource('/tickets', TicketController::class);
+Route::middleware('auth:sanctum')->group(function() {
+
+    Route::apiResource('/tickets', TicketController::class);
+
+    // Auth
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
