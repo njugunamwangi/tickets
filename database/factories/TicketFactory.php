@@ -17,8 +17,10 @@ class TicketFactory extends Factory
      */
     public function definition(): array
     {
+        $users = User::all()->pluck('id');
+
         return [
-            'user_id' => User::factory(),
+            'user_id' => $users->random(),
             'title' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'status' => fake()->randomElement(['A', 'C', 'H', 'X']),
