@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
-class UserTicketsController extends Controller
+class UserTicketsController extends ApiController
 {
     public function index($user_id, TicketFilter $filters)
     {
@@ -32,5 +32,27 @@ class UserTicketsController extends Controller
         ];
 
         return new TicketResource(Ticket::create($model));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($userId, $ticketId)
+    {
+        try {
+
+            $ticket = Ticket::findOrFail($ticketId);
+
+            if($ticket->user_id == $userId) {
+
+                $ticket->delete();
+
+                return $this->ok('Ticket deleted successfully');
+            }
+
+        } catch(ModelNotFoundException $exception) {
+
+            return $this->ok('Ticket not found', 404);
+        }
     }
 }
